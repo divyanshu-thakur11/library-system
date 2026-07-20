@@ -374,7 +374,19 @@ export default function Billing() {
               <label>Billing Date</label>
               <DateInputDMY value={form.bill_date} onChange={(v) => setForm({ ...form, bill_date: v })} />
             </div>
+            <div className="field">
+              <label>Validity Start (optional)</label>
+              <DateInputDMY value={form.pending_validity_start} onChange={(v) => setForm({ ...form, pending_validity_start: v })} />
+            </div>
+            <div className="field">
+              <label>Validity End (optional)</label>
+              <DateInputDMY value={form.pending_validity_end} onChange={(v) => setForm({ ...form, pending_validity_end: v })} />
+            </div>
           </div>
+          <p style={{ fontSize: '0.78rem', color: 'var(--ink-soft)', marginTop: -8, marginBottom: 14 }}>
+            If set, this validity period is applied to the member only once this bill is fully paid — a part payment
+            won't extend it early. Leave blank if this bill isn't tied to a specific validity period.
+          </p>
           {(() => {
             const finalPayable = Number(form.base_amount || 0) - Number(form.discount || 0);
             const paidNow = Number(form.amount_paid_now || 0);
