@@ -1,0 +1,780 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root {
+  /* Color: reading-room ledger — deep lamp green, brass accent, ivory page.
+     Kept and refined rather than replaced - this is Shiv Shakti Library's
+     identity (a library card-catalog, ruled ledger, brass reading-lamp
+     feel), not a generic template default. */
+  --ink: #1c2620;
+  --ink-soft: #445048;
+  --ink-faint: #7a8880;
+  --paper: #f6f4ec;
+  --paper-raised: #ffffff;
+  --paper-sunken: #eeead9;
+  --line: #dcd6c4;
+  --line-soft: #e8e3d3;
+  --green-900: #12261f;
+  --green-700: #1d4a3a;
+  --green-600: #245c48;
+  --green-500: #2f6e56;
+  --green-soft: #e2ede6;
+  --brass: #b8853a;
+  --brass-dark: #8f6526;
+  --brass-soft: #ecdcb8;
+  --red: #a3402f;
+  --red-soft: #f4e2dd;
+  --amber: #a3792f;
+  --amber-soft: #faf0d6;
+  --blue: #2f5aa3;
+  --blue-soft: #e1e9f7;
+
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Source Sans 3', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+
+  /* Spacing + radius scale, so components share the same rhythm instead of
+     one-off magic numbers scattered across pages. */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+
+  --radius-sm: 4px;
+  --radius: 8px;
+  --radius-lg: 14px;
+
+  --shadow-sm: 0 1px 2px rgba(28, 38, 32, 0.05);
+  --shadow: 0 1px 2px rgba(28, 38, 32, 0.06), 0 4px 14px rgba(28, 38, 32, 0.05);
+  --shadow-lg: 0 8px 24px rgba(18, 38, 31, 0.14), 0 2px 8px rgba(18, 38, 31, 0.08);
+
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root { height: 100%; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 14.5px;
+  line-height: 1.55;
+  /* Faint paper grain - a whisper of texture, not a loud pattern. */
+  background-image: radial-gradient(rgba(28, 38, 32, 0.018) 1px, transparent 0);
+  background-size: 22px 22px;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  color: var(--green-900);
+  margin: 0 0 4px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+h1 { font-size: 1.5rem; }
+h2 { font-size: 1.15rem; }
+h3 { font-size: 1rem; }
+
+a {
+  color: var(--green-700);
+  transition: color 0.15s var(--ease);
+}
+a:hover { color: var(--green-500); }
+
+/* Accessible, visible focus everywhere - buttons, links, inputs, nav. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--brass);
+  outline-offset: 2px;
+}
+
+::selection { background: var(--brass-soft); color: var(--green-900); }
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: 20px;
+  border: 2px solid var(--paper);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--brass); }
+
+.app-shell {
+  display: grid;
+  grid-template-columns: 232px 1fr;
+  min-height: 100vh;
+}
+
+.sidebar {
+  background: linear-gradient(180deg, var(--green-900) 0%, #0d1e18 100%);
+  color: #e8e5d8;
+  padding: 22px 16px;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid rgba(184, 133, 58, 0.15);
+  /* Independent scroll region, pinned to the viewport - without this, a
+     tall page (e.g. Cabins with many cabin cards) makes the whole grid
+     row stretch to match, and the sidebar scrolls away with the content
+     instead of staying put. align-self: start stops the grid from
+     stretching it to that height in the first place. */
+  position: sticky;
+  top: 0;
+  align-self: start;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.sidebar .brand {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  color: #fff;
+  margin-bottom: 4px;
+  letter-spacing: -0.01em;
+}
+
+.sidebar .brand-sub {
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--brass-soft);
+  margin-bottom: 28px;
+  opacity: 0.85;
+}
+
+.sidebar nav { display: flex; flex-direction: column; gap: 2px; }
+
+.sidebar nav a {
+  color: #cfd6cd;
+  text-decoration: none;
+  padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.92rem;
+  border-left: 2px solid transparent;
+  transition: background 0.15s var(--ease), color 0.15s var(--ease), border-color 0.15s var(--ease);
+}
+
+.sidebar nav a:hover { background: rgba(255,255,255,0.07); color: #fff; }
+
+.sidebar nav a.active {
+  background: rgba(184, 133, 58, 0.18);
+  color: #fff;
+  border-left-color: var(--brass);
+  font-weight: 600;
+}
+
+.sidebar .user-box {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  font-size: 0.82rem;
+}
+
+.sidebar .user-box .role-tag {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 1px 8px;
+  border-radius: 20px;
+  background: rgba(184,133,58,0.22);
+  color: var(--brass-soft);
+  font-size: 0.68rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.sidebar button.logout {
+  margin-top: 10px;
+  background: none;
+  border: 1px solid rgba(255,255,255,0.18);
+  color: #cfd6cd;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 0.8rem;
+  width: 100%;
+  transition: background 0.15s var(--ease), border-color 0.15s var(--ease), color 0.15s var(--ease);
+}
+.sidebar button.logout:hover {
+  background: rgba(163, 64, 47, 0.25);
+  border-color: rgba(163, 64, 47, 0.5);
+  color: #fff;
+}
+
+.main {
+  padding: 28px 36px 60px;
+  max-width: 1180px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 22px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 14px;
+}
+
+.page-header .eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--brass);
+  margin-bottom: 4px;
+}
+
+.card {
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px 20px;
+  margin-bottom: 18px;
+  transition: box-shadow 0.2s var(--ease);
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.stat-card {
+  position: relative;
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  overflow: hidden;
+}
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--brass);
+  opacity: 0.55;
+}
+
+.stat-card .label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+}
+
+.stat-card .value {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  color: var(--green-900);
+  margin-top: 4px;
+  font-weight: 600;
+}
+
+table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+th {
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ink-soft);
+  border-bottom: 2px solid var(--line);
+  padding: 8px 10px;
+}
+td { padding: 9px 10px; border-bottom: 1px solid var(--line-soft); }
+tr:last-child td { border-bottom: none; }
+tbody tr { transition: background 0.12s var(--ease); }
+tbody tr:hover { background: var(--paper-sunken); }
+
+.btn {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--green-700);
+  background: var(--green-700);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.15s var(--ease), transform 0.1s var(--ease), box-shadow 0.15s var(--ease), border-color 0.15s var(--ease);
+}
+.btn:hover { background: var(--green-500); border-color: var(--green-500); box-shadow: var(--shadow-sm); transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
+.btn.secondary {
+  background: transparent;
+  color: var(--green-700);
+}
+.btn.secondary:hover { background: rgba(29,74,58,0.07); border-color: var(--green-500); transform: translateY(-1px); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+input, select, textarea {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: #fff;
+  color: var(--ink);
+  width: 100%;
+  transition: border-color 0.15s var(--ease), box-shadow 0.15s var(--ease);
+}
+input:hover, select:hover, textarea:hover { border-color: var(--brass); }
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--brass);
+  box-shadow: 0 0 0 3px rgba(184, 133, 58, 0.15);
+}
+input::placeholder, textarea::placeholder { color: var(--ink-faint); }
+
+label {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+.field { margin-bottom: 14px; }
+
+.badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+.badge.active { background: var(--green-soft); color: var(--green-700); }
+.badge.inactive { background: #ece9dc; color: var(--ink-soft); }
+.badge.special {
+  background: var(--red-soft);
+  color: var(--red);
+  border: 1px solid rgba(163,64,47,0.35);
+}
+
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px dashed var(--brass);
+  border-radius: var(--radius-sm);
+  background: rgba(184,133,58,0.06);
+}
+.checkbox-row input { width: auto; }
+
+.error-banner {
+  background: var(--red-soft);
+  color: var(--red);
+  border: 1px solid rgba(163,64,47,0.3);
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 14px;
+  font-size: 0.88rem;
+}
+
+.table-scroll {
+  max-height: 420px;
+  overflow-y: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+.table-scroll table { margin: 0; }
+.table-scroll th {
+  position: sticky;
+  top: 0;
+  background: var(--paper-raised);
+  z-index: 1;
+}
+
+.cabin-board {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 14px;
+}
+
+.cabin-tile {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper-raised);
+  padding: 12px 14px;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s var(--ease);
+}
+.cabin-tile:hover { box-shadow: var(--shadow); }
+
+.cabin-tile.cabin-vacant {
+  background: var(--blue-soft);
+  border-color: var(--blue);
+}
+
+.cabin-tile.cabin-fully-occupied {
+  background: #e5f3ec;
+  border: 2px solid var(--green-500);
+  box-shadow: 0 0 0 1px var(--green-500) inset;
+}
+
+.cabin-tile .cabin-number {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--green-900);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cabin-vacant-badge {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--blue);
+  background: #fff;
+  border: 1px solid var(--blue);
+  border-radius: 3px;
+  padding: 2px 6px;
+}
+
+.timeline-bar {
+  display: flex;
+  width: 100%;
+  height: 22px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  margin: 10px 0 4px;
+  border: 1px solid var(--line);
+}
+
+.timeline-segment {
+  height: 100%;
+  cursor: default;
+  transition: opacity 0.15s var(--ease);
+}
+.timeline-segment:hover { opacity: 1 !important; }
+.timeline-segment.seg-free { background: var(--green-500); opacity: 0.35; }
+.timeline-segment.seg-occupied { background: var(--red); opacity: 0.75; }
+.timeline-segment.seg-special { background: var(--amber); opacity: 0.8; }
+
+.timeline-hours {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--ink-soft);
+  margin-bottom: 10px;
+}
+
+.occupant-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px;
+  border-radius: var(--radius-sm);
+  margin-top: 6px;
+  font-size: 0.8rem;
+}
+.occupant-row.occupied { background: var(--red-soft); border: 1px solid rgba(163,64,47,0.25); }
+.occupant-row.special { background: var(--amber-soft); border: 1px solid rgba(163,121,47,0.3); }
+
+.daypart-label {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--brass);
+  margin-top: 10px;
+  margin-bottom: 2px;
+}
+.daypart-label:first-of-type { margin-top: 4px; }
+
+.slot-row {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+
+.slot-row.slot-free { background: rgba(47, 110, 86, 0.06); }
+.slot-row.slot-occupied { background: rgba(163, 64, 47, 0.06); }
+
+.slot-row .slot-label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+}
+
+.slot-row .slot-label .dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+.slot-free .dot { background: var(--green-500); }
+.slot-occupied .dot { background: var(--red); }
+
+.member-chip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  font-size: 0.82rem;
+  margin-top: 4px;
+}
+
+.calendar-legend {
+  display: flex;
+  gap: 18px;
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  margin-bottom: 14px;
+  align-items: center;
+}
+.calendar-legend .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; }
+
+/* Member ID Card */
+.member-card {
+  width: 480px;
+  border: 2px solid var(--green-900);
+  border-radius: var(--radius-lg);
+  padding: 20px 24px;
+  background: #fffdf7;
+  font-family: var(--font-body);
+  box-shadow: var(--shadow);
+}
+.member-card .card-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+}
+.member-card .card-name {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  color: var(--green-900);
+  margin-bottom: 4px;
+}
+.member-card .card-line { font-size: 0.9rem; margin-bottom: 4px; }
+.member-card .card-mobile-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  margin: 6px 0 12px;
+}
+.member-card table { margin-top: 10px; font-size: 0.8rem; }
+.member-card th, .member-card td { padding: 5px 8px; }
+
+@media print {
+  .no-print { display: none !important; }
+  .app-shell { display: block; }
+  .main { padding: 0; max-width: none; }
+}
+
+.login-wrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(ellipse 900px 600px at 30% 20%, rgba(184, 133, 58, 0.12), transparent 60%),
+    radial-gradient(ellipse 900px 700px at 80% 90%, rgba(47, 110, 86, 0.18), transparent 60%),
+    var(--green-900);
+}
+
+.login-card {
+  background: var(--paper-raised);
+  padding: 36px 34px;
+  border-radius: var(--radius-lg);
+  width: 340px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+  border-top: 3px solid var(--brass);
+}
+
+.login-card .brand {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: var(--green-900);
+}
+.login-card .brand-sub {
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+  margin-bottom: 22px;
+}
+
+/* Respect reduced-motion preferences - the small lifts/transitions above
+   are subtle, but this removes them entirely for anyone who's asked to. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+  html { scroll-behavior: auto; }
+}
+
+/* ============================================
+   RESPONSIVE — TABLET & MOBILE
+   ============================================ */
+@media (max-width: 900px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+
+  .sidebar {
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 12px 14px;
+    gap: 10px;
+    position: static;
+    height: auto;
+    overflow-y: visible;
+  }
+
+  .sidebar .brand,
+  .sidebar .brand-sub {
+    margin-bottom: 0;
+  }
+
+  .sidebar .brand-sub { display: none; }
+
+  .sidebar nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 4px;
+    width: 100%;
+    order: 3;
+  }
+
+  .sidebar nav a {
+    padding: 7px 10px;
+    font-size: 0.82rem;
+  }
+
+  .sidebar .user-box {
+    margin-top: 0;
+    margin-left: auto;
+    padding-top: 0;
+    border-top: none;
+    order: 2;
+    text-align: right;
+  }
+
+  .sidebar button.logout {
+    width: auto;
+    margin-top: 4px;
+  }
+
+  .main {
+    padding: 18px 16px 40px;
+    max-width: 100%;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .stat-grid {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+  }
+
+  .cabin-board {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 10px;
+  }
+
+  .member-card {
+    width: 100%;
+    max-width: 480px;
+    padding: 18px 16px;
+  }
+
+  .login-card {
+    width: 90%;
+    max-width: 340px;
+    padding: 28px 24px;
+  }
+
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 900px) {
+  /* iOS Safari zooms the whole page in when a focused input's font-size
+     is under 16px - very common annoyance on forms. Every input/select
+     already used a slightly smaller size for density on desktop; bump it
+     back up specifically on touch-sized screens. */
+  input, select, textarea {
+    font-size: 16px;
+  }
+
+  /* Bigger, easier-to-tap buttons - the desktop density (8px/16px
+     padding) is fine with a mouse, cramped with a thumb. */
+  .btn, .btn.secondary {
+    padding: 10px 16px;
+    min-height: 40px;
+  }
+  table .btn, table .btn.secondary {
+    min-height: 32px;
+    padding: 6px 10px;
+  }
+
+  .table-scroll {
+    max-height: 320px;
+  }
+}
+
+@media (max-width: 480px) {
+  body { font-size: 13.5px; }
+
+  .main { padding: 14px 12px 32px; }
+
+  .card { padding: 14px 14px; }
+
+  .stat-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .stat-card .value { font-size: 1.4rem; }
+
+  .btn {
+    width: 100%;
+    padding: 10px 16px;
+    font-size: 0.9rem;
+  }
+
+  .login-wrap { padding: 16px; }
+
+  .login-card {
+    width: 100%;
+    padding: 24px 20px;
+  }
+
+  .calendar-legend {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+}
